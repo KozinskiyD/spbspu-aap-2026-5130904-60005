@@ -1,8 +1,8 @@
 #include <iostream>
+#include <stdexcept>
 #include <cstddef>
 #include <new>
 #include <limits>
-#include <stdexcept>
 #include <fstream>
 
 namespace kozinskiy {
@@ -16,7 +16,7 @@ namespace kozinskiy {
   const int min_int = std::numeric_limits< int >::min();
   const size_t max_sizet = std::numeric_limits< size_t >::max();
 
-  void safe_add(int& result, int value)
+  void safeAdd(int& result, int value)
   {
     if (result > 0 && value > 0 && result > max_int - value) {
       throw std::overflow_error("too big int value");
@@ -27,7 +27,7 @@ namespace kozinskiy {
     result += value;
   }
 
-  bool parse_num(const char* str, int& value)
+  bool parseNum(const char* str, int& value)
   {
     if (!str || *str == '\0') {
       return false;
@@ -59,7 +59,7 @@ namespace kozinskiy {
     return true;
   }
 
-  size_t count_columns_no_adjacent_equals(size_t rows, size_t cols, const int* matrix)
+  size_t countColumnsNoAdjacentEquals(size_t rows, size_t cols, const int* matrix)
   {
     size_t count = 0;
     for (size_t c = 0; c < cols; c++) {
@@ -77,7 +77,7 @@ namespace kozinskiy {
     return count;
   }
 
-  int min_sum_parallel_main_diagonal(size_t rows, size_t cols, const int* matrix)
+  int minSumParallelMainDiagonal(size_t rows, size_t cols, const int* matrix)
   {
     size_t len = rows;
     if (cols < rows) {
@@ -91,7 +91,7 @@ namespace kozinskiy {
     for (size_t d = 1; d < len; d++) {
       int cur_sum = 0;
       for (size_t r = 0; r < len - d; r++) {
-        safe_add(cur_sum, matrix[r * cols + (r + d)]);
+        safeAdd(cur_sum, matrix[r * cols + (r + d)]);
       }
       if (cur_sum < min_sum) {
         min_sum = cur_sum;
@@ -99,7 +99,7 @@ namespace kozinskiy {
 
       cur_sum = 0;
       for (size_t c = 0; c < len - d; c++) {
-        safe_add(cur_sum, matrix[(c + d) * cols + c]);
+        safeAdd(cur_sum, matrix[(c + d) * cols + c]);
       }
       if (cur_sum < min_sum) {
         min_sum = cur_sum;
@@ -108,7 +108,7 @@ namespace kozinskiy {
     return min_sum;
   }
 
-  void read_matrix(std::istream& input, int* matrix, size_t size)
+  void parseMatrixValues(std::istream& input, int* matrix, size_t size)
   {
     for (size_t i = 0; i < size; i++) {
       if (!(input >> matrix[i])) {
@@ -117,7 +117,7 @@ namespace kozinskiy {
     }
   }
 
-  void process_matrices(std::istream& input, std::ostream& out, bool is_dynamic)
+  void processMatrices(std::istream& input, std::ostream& out, bool is_dynamic)
   {
     size_t rows = 0;
     size_t cols = 0;
@@ -157,9 +157,9 @@ namespace kozinskiy {
       }
 
       try {
-        read_matrix(input, matrix, rows * cols);
-        const size_t res1 = count_columns_no_adjacent_equals(rows, cols, matrix);
-        const int res2 = min_sum_parallel_main_diagonal(rows, cols, matrix);
+        parseMatrixValues(input, matrix, rows * cols);
+        const size_t res1 = countColumnsNoAdjacentEquals(rows, cols, matrix);
+        const int res2 = minSumParallelMainDiagonal(rows, cols, matrix);
         out << res1 << " " << res2 << "\n";
       } catch (...) {
         if (is_dynamic) {
@@ -191,7 +191,7 @@ int main(int argc, char** argv)
   }
 
   int mode = 0;
-  if (!parse_num(argv[1], mode) || (mode != 1 && mode != 2)) {
+  if (!parseNum(argv[1], mode) || (mode != 1 && mode != 2)) {
     std::cerr << "Error: first parameter is out of range or not a number";
     return invalid_argument_ec;
   }
@@ -214,7 +214,7 @@ int main(int argc, char** argv)
   }
 
   try {
-    process_matrices(in_file, out_file, is_dynamic);
+    processMatrices(in_file, out_file, is_dynamic);
   } catch (const std::overflow_error& e) {
     std::cerr << "Error: " << e.what();
     return invalid_file_ec;
