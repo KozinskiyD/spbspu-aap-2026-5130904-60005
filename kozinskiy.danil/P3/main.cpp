@@ -1,9 +1,9 @@
 #include <iostream>
-#include <cstddef>
-#include <new>
-#include <limits>
-#include <stdexcept>
 #include <fstream>
+#include <stdexcept>
+#include <cstddef>
+#include <limits>
+#include <new>
 
 namespace kozinskiy {
 
@@ -49,7 +49,7 @@ namespace kozinskiy {
       if (*str < '0' || *str > '9') {
         return false;
       }
-      int digit = *str - '0';
+      const int digit = *str - '0';
       if (acc > (max_int - digit) / 10) {
         return false;
       }
@@ -158,8 +158,8 @@ namespace kozinskiy {
 
       try {
         read_matrix(input, matrix, rows * cols);
-        size_t res1 = count_columns_no_adjacent_equals(rows, cols, matrix);
-        int res2 = min_sum_parallel_main_diagonal(rows, cols, matrix);
+        const size_t res1 = count_columns_no_adjacent_equals(rows, cols, matrix);
+        const int res2 = min_sum_parallel_main_diagonal(rows, cols, matrix);
         out << res1 << " " << res2 << "\n";
       } catch (...) {
         if (is_dynamic) {
