@@ -1,4 +1,3 @@
-
 #include <cstddef>
 #include <iostream>
 #include <limits>
@@ -9,7 +8,7 @@ namespace kozinskiy {
 const int invalid_argument_ec = 1;
 const int good_ec = 0;
 
-char *exc_snd(char *result, const char *first, const char *second) {
+char *excSnd(char *result, const char *first, const char *second) {
   std::size_t j = 0;
 
   for (std::size_t i = 0; first[i] != '\0'; i++) {
@@ -31,7 +30,7 @@ char *exc_snd(char *result, const char *first, const char *second) {
   return result;
 }
 
-std::size_t dif_lat(const char *str) {
+size_t difLat(const char *str) {
   bool letters[52] = {};
   std::size_t count = 0;
 
@@ -55,7 +54,7 @@ std::size_t dif_lat(const char *str) {
   return count;
 }
 
-} // namespace kozinskiy
+}
 
 int main() {
   std::size_t capacity = 16;
@@ -117,9 +116,9 @@ int main() {
     return kozinskiy::invalid_argument_ec;
   }
 
-  kozinskiy::exc_snd(result, str, second);
+  kozinskiy::excSnd(result, str, second);
   std::cout << result << '\n';
-  std::cout << kozinskiy::dif_lat(str) << '\n';
+  std::cout << kozinskiy::difLat(str) << '\n';
 
   if (!std::cout) {
     delete[] result;
