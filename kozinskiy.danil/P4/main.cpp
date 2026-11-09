@@ -1,5 +1,5 @@
-#include <cstddef>
 #include <iostream>
+#include <cstddef>
 #include <limits>
 #include <new>
 
@@ -7,6 +7,9 @@ namespace kozinskiy {
 
   const int invalid_argument_ec = 1;
   const int good_ec = 0;
+  const std::size_t latinLettersCount = 52;
+  const unsigned int lowercaseOffset = 26;
+  const std::size_t initialCapacity = 16;
 
   char *excSnd(char *result, const char *first, const char *second)
   {
@@ -31,9 +34,9 @@ namespace kozinskiy {
     return result;
   }
 
-  size_t difLat(const char *str)
+  std::size_t difLat(const char *str)
   {
-    bool letters[52] = {};
+    bool letters[latinLettersCount] = {};
     std::size_t count = 0;
 
     for (std::size_t i = 0; str[i] != '\0'; i++) {
@@ -42,7 +45,7 @@ namespace kozinskiy {
       if (str[i] >= 'A' && str[i] <= 'Z') {
         index = str[i] - 'A';
       } else if (str[i] >= 'a' && str[i] <= 'z') {
-        index = str[i] - 'a' + 26;
+        index = str[i] - 'a' + lowercaseOffset;
       } else {
         continue;
       }
@@ -60,7 +63,7 @@ namespace kozinskiy {
 
 int main()
 {
-  std::size_t capacity = 16;
+  std::size_t capacity = kozinskiy::initialCapacity;
   std::size_t length = 0;
 
   char *str = new (std::nothrow) char[capacity];
@@ -80,8 +83,8 @@ int main()
         return kozinskiy::invalid_argument_ec;
       }
 
-      std::size_t new_capacity = capacity * 2;
-      char *temp = new (std::nothrow) char[new_capacity];
+      const std::size_t new_capacity = capacity * 2;
+      char *const temp = new (std::nothrow) char[new_capacity];
 
       if (temp == nullptr) {
         delete[] str;
@@ -107,11 +110,17 @@ int main()
     return kozinskiy::invalid_argument_ec;
   }
 
+  if (length == 0) {
+    delete[] str;
+    std::cerr << "Error: empty input";
+    return kozinskiy::invalid_argument_ec;
+  }
+
   str[length] = '\0';
 
   const char second[] = "abc";
 
-  char *result = new (std::nothrow) char[length + 1];
+  char *const result = new (std::nothrow) char[length + 1];
 
   if (result == nullptr) {
     delete[] str;
